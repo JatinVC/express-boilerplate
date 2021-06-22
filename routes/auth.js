@@ -131,5 +131,5 @@ router.post('/api/register', (req, res, next)=>{
 router.get('/api/logout', (req, res, next)=>{
     res.clearCookie('token');
     //TODO deauthenticate tokens
-})
+});
 module.exports.router = router;

@@ -1,12 +1,17 @@
 require('dotenv').config();
 const express = require('express');
+var app = express();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const http = require('http');
 const bodyParser = require('body-parser');
+const authorize = require('./_helpers/authorize');
 
 //calling the database setup function
 db = require('./lib/db')({global: true});
+
+var server = http.createServer(app);
+server.listen(process.env.PORT || 3001); 
 
 //devops setup
 global.config = require('./config/server.json');
@@ -25,6 +30,7 @@ app.set('port', process.env.PORT || 3001);
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(authorize);
 
 //import the routes here
 const auth = require('./routes/auth');
