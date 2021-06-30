@@ -4,7 +4,6 @@ var app = express();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const http = require('http');
-const bodyParser = require('body-parser');
 const authorize = require('./_helpers/authorize');
 
 //calling the database setup function
@@ -27,8 +26,8 @@ app.use(function(req, res, next) {
 
 //setting the port for the application as well as some middlewares
 app.set('port', process.env.PORT || 3001);
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
 app.use(cookieParser());
 app.use(authorize);
 
