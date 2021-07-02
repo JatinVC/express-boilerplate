@@ -1,14 +1,21 @@
+/**
+* File Name: AUTH.JS 
+* Version: 0.0.1
+* Author: JatinVC
+* Description: All routes in this file handle authentication of users, 
+*              for both full-stack applications and server-side applications.
+*/
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 
-/*
+/**
 * Route
 * Name: /login
 * Method: GET
-* Description: display the login page, only for server side applications
+* Description: send the login page to the client, only for server side applications
 * Parameters:
 */
 
@@ -16,12 +23,14 @@ router.get('/login', (req, res, next)=>{
     res.render('login');
 })
 
-/*
+/**
 * Route
 * Name: /api/login
 * Method: POST
-* Description: authenticate users logging in
-* Parameters:
+* Description: authenticate users logging in, 
+*              compare the stored hashed password with the password that was 
+*              given by the user to authenticate the user. Then generate a JWT
+*              token with the username and store in a cookie.
 */
 router.post('/api/login', (req, res, next)=>{
     let username = req.body.username;
@@ -33,13 +42,10 @@ router.post('/api/login', (req, res, next)=>{
         //email,
     }
     
-    //find the username or email in the database
     global.db('user').select().where({findParams})
     .then((row)=>{
-        //compare the encrypted password stored on the database with the password given.
         bcrypt.compare(password, rows[0].password, (err, result)=>{
             if(err){
-                //render for server-side applications
                 res.status(401).json({message: 'User authentication failed'});
                 // res.render('/login', {message: 'login failed, please try again'});
             }else{
@@ -53,7 +59,6 @@ router.post('/api/login', (req, res, next)=>{
                     expiresIn: 60*60*24
                 });
 
-                //store token in a cookie
                 res.cookie('token', token, {maxAge: 60*60*24*1000, httpOnly: true});
                 res.json({
                     message: 'User Authenticated',
@@ -71,11 +76,11 @@ router.post('/api/login', (req, res, next)=>{
     });
 });
 
-/*
+/**
 * Route
 * Name: /register
 * Method: GET
-* Description: send the register page
+* Description: send the register page to the client
 * Parameters:
 */
 
@@ -83,12 +88,12 @@ router.get('/register', (req, res, next)=>{
     res.render('register');
 });
 
-/*
+/**
 * Route
 * Name: /api/register
 * Method: POST
-* Description: create new user
-* Parameters:
+* Description: create a new user, encrypt the password using bcrypt 
+*              and store the username and the encrypted password in the database.
 */
 
 router.post('/api/register', (req, res, next)=>{
@@ -120,16 +125,15 @@ router.post('/api/register', (req, res, next)=>{
 });
 
 
-/*
+/**
 * Route
 * Name: /api/logout
 * Method: GET
 * Description: deauthenticate users and log them out.
-* Parameters:
 */
+//TODO somehow also need to track tokens that are deauthenticated, and reject any request from them
 
 router.get('/api/logout', (req, res, next)=>{
     res.clearCookie('token');
-    //TODO deauthenticate tokens
 });
 module.exports.router = router;

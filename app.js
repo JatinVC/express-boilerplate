@@ -33,6 +33,7 @@ app.use(authorize);
 
 //import the routes here
 const auth = require('./routes/auth');
+
 //mount the routes here
 app.use('/', auth.router);
 

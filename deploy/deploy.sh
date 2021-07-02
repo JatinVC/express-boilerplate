@@ -1,4 +1,7 @@
-#devops stuff here, students ignore
+# devops stuff here, students ignore
+# this file will go through the list of servers set on gitlab
+# and initialize the project inside of there by calling updateAndRestart.sh
+# and sending the server address as a parameter.
 #!/bin/bash
 
 # any future command that fails will exit the script

@@ -1,4 +1,9 @@
-#devops stuff here, students ignore
+# devops stuff here, students ignore
+# check if the deploy directory is already a git repository, if so then pull
+# to latest code, if not then clone the repository through ssh.
+# then build the dependencies and run the application.
+# make sure to change the DEPLOY_DIR variable to where you want to deploy the
+# application to, and change the app-name at the bottom of the file.
 #!/bin/bash
 
 # any future command that fails will exit the script
